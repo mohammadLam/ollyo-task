@@ -2,18 +2,25 @@ import clsx from 'clsx'
 import { CSS } from '@dnd-kit/utilities'
 import React, { useContext } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
+import { Lookup, SpringValues, animated } from '@react-spring/web'
 import PhotoI from '../interface/photos'
 import { PhotoContext } from '../context/PhotoContext'
 
-const Photo: React.FC<PhotoI> = ({ isFeatured = false, id, image }) => {
+interface PropsI extends PhotoI {
+  style?: SpringValues<Lookup<number>>
+}
+
+const Photo: React.FC<PropsI> = ({ isFeatured = false, id, image, style }) => {
   const { value, dispatch } = useContext(PhotoContext)
   const { selectedPhotos } = value
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id
   })
-  const style = {
+  const sortableStyle = {
     transform: CSS.Transform.toString(transform),
-    transition
+    transition,
+    ...style
   }
 
   const onPhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,27 +32,31 @@ const Photo: React.FC<PhotoI> = ({ isFeatured = false, id, image }) => {
   }
 
   return (
-    <div
+    <animated.div
       ref={setNodeRef}
-      style={style}
+      style={sortableStyle}
       {...attributes}
       {...listeners}
       className={clsx(
-        'relative 2xl:w-[200px] 2xl:h-[200px] w-[150px] h-[150px] rounded-xl bg-white overflow-hidden border bg-blend-darken',
+        'relative 2xl:w-[200px] 2xl:h-[200px] w-[150px] h-[150px] rounded-xl overflow-hidden border bg-white origin-[50%_50%] cursor-grab group',
         {
           '2xl:!w-[416px] 2xl:!h-[416px] w-[316px] h-[316px] row-span-2 col-span-2': isFeatured
+        },
+        {
+          'cursor-grabbing': isDragging
         }
       )}
     >
+      <div className='w-full h-full transition duration-300 group-hover:bg-black/10 absolute'></div>
       <img src={image} alt={`Photo Id ${id}`} className='w-full h-full object-cover' />
       <input
         type='checkbox'
-        className='z-10 absolute top-4 right-4 rounded-full'
+        className='z-10 w-5 h-5 absolute top-4 right-4 rounded-full'
         checked={selectedPhotos.includes(id)}
         onPointerDown={event => event.stopPropagation()}
         onChange={onPhotoChange}
       />
-    </div>
+    </animated.div>
   )
 }
 
