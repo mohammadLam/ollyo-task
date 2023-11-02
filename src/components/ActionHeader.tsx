@@ -34,7 +34,7 @@ const ActionHeader: React.FC = () => {
         />
         <p>
           {selectedPhotos.length > 0
-            ? `${selectedPhotos.length} photos are selected`
+            ? `${selectedPhotos.length} photos selected`
             : 'Select all photos'}
         </p>
       </div>
@@ -45,7 +45,7 @@ const ActionHeader: React.FC = () => {
         onClick={onDeletePhotos}
       >
         <Trash2Icon size={20} color='#ffffff' />
-        <span className='font-medium'>Delete Photos</span>
+        <span className='text-sm md:text-base font-medium'>Delete Photos</span>
       </animated.button>
     </div>
   )

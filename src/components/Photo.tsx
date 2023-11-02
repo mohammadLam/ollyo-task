@@ -51,7 +51,7 @@ const Photo: React.FC<PropsI> = ({ isFeatured = false, id, image, style }) => {
       <img src={image} alt={`Photo Id ${id}`} className='w-full h-full object-cover' />
       <input
         type='checkbox'
-        className='z-10 w-5 h-5 absolute top-4 right-4 rounded-full'
+        className='z-10 md:w-5 md:h-5 absolute top-4 right-4 rounded-full'
         checked={selectedPhotos.includes(id)}
         onPointerDown={event => event.stopPropagation()}
         onChange={onPhotoChange}
