@@ -1,6 +1,15 @@
 import React, { useContext } from 'react'
 import { useTransition } from '@react-spring/web'
-import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  PointerSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors
+} from '@dnd-kit/core'
 import { SortableContext, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable'
 import Photo from './Photo'
 import AddPhoto from './AddPhoto'
@@ -17,6 +26,10 @@ const Grid: React.FC = () => {
       duration: 300
     }
   })
+  const touchSensor = useSensor(TouchSensor)
+  const pointerSensor = useSensor(PointerSensor)
+  const mouseSensor = useSensor(MouseSensor)
+  const sensors = useSensors(touchSensor, pointerSensor, mouseSensor)
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -34,7 +47,7 @@ const Grid: React.FC = () => {
   }
 
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
       <SortableContext items={photos} strategy={rectSortingStrategy}>
         <div className='grid grid-cols-[150px_150px] md:grid-cols-[150px_150px_150px] lg:grid-cols-[150px_150px_150px_150px] 2xl:grid-cols-[200px_200px_200px_200px] gap-4'>
           {transitions((style, photo, _, index) => (

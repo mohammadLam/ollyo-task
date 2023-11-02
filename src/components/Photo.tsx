@@ -30,7 +30,7 @@ const Photo: React.FC<PropsI> = ({ isFeatured = false, id, image, style }) => {
       dispatch({ type: 'uncheck-single-photo', payload: { photoId: id } })
     }
   }
-
+  
   return (
     <animated.div
       ref={setNodeRef}
@@ -53,6 +53,8 @@ const Photo: React.FC<PropsI> = ({ isFeatured = false, id, image, style }) => {
         type='checkbox'
         className='z-10 md:w-5 md:h-5 absolute top-4 right-4 rounded-full'
         checked={selectedPhotos.includes(id)}
+        onTouchStart={event => event.stopPropagation()}
+        onMouseDown={event => event.stopPropagation()}
         onPointerDown={event => event.stopPropagation()}
         onChange={onPhotoChange}
       />
